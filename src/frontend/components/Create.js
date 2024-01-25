@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
+import axios from 'axios';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
-
 const Create = ({ marketplace, nft }) => {
   const [image, setImage] = useState('')
   const [price, setPrice] = useState(null)
@@ -14,25 +14,32 @@ const Create = ({ marketplace, nft }) => {
     const file = event.target.files[0]
     if (typeof file !== 'undefined') {
       try {
-        const result = await client.add(file)
+        // const result = await client.add(file)
+        const formData=new FormData();
+        formData.append("audio",file);
+        const result=await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/upload`,formData);
+        // ?user=${process.env.REACT_APP_USER}&password=${process.env.REACT_APP_PASSWORD}`);
         console.log(result)
-        setImage(`https://ipfs.infura.io/ipfs/${result.path}`)
+        const ipfsResponse=await axios.get(`https://azure-realistic-vicuna-515.mypinata.cloud/ipfs/${result.data.IpfsHash}?pinataGatewayToken=${process.env.REACT_APP_GATEWAY_TOKEN}`);
+        setImage(ipfsResponse);
       } catch (error){
-        console.log("ipfs image upload error: ", error)
+        console.log("pinata pdf upload error: ", error)
       }
     }
   }
   const createNFT = async () => {
+    console.log("I am in createNFT",image);
     if (!image || !price || !name || !description) return
     try{
-      const result = await client.add(JSON.stringify({image, price, name, description}))
+      const fData=JSON.stringify({image, price, name, description});
+      const result =await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/nft`,{data:fData});
       mintThenList(result)
     } catch(error) {
       console.log("ipfs uri upload error: ", error)
     }
   }
   const mintThenList = async (result) => {
-    const uri = `https://ipfs.infura.io/ipfs/${result.path}`
+    const uri = `https://azure-realistic-vicuna-515.mypinata.cloud/ipfs/${result.data.IpfsHash}?pinataGatewayToken=${process.env.REACT_APP_GATEWAY_TOKEN}`
     // mint nft 
     await(await nft.mint(uri)).wait()
     // get tokenId of new nft 
