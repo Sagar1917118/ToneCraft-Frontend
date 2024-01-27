@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card } from 'react-bootstrap'
-
+import Card from "./Card.js";
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
   const [purchases, setPurchases] = useState([])
@@ -21,7 +20,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
       // get total price of item (item price + fee)
       const totalPrice = await marketplace.getTotalPrice(i.itemId)
       // define listed item object
-      let purchasedItem = {
+      let purchasedItem = { 
         totalPrice,
         price: i.price,
         itemId: i.itemId,
@@ -43,19 +42,20 @@ export default function MyPurchases({ marketplace, nft, account }) {
     </main>
   )
   return (
-    <div className="flex justify-center">
+    <div className="container" style={{marginBottom:"30px"}}>
       {purchases.length > 0 ?
-        <div className="px-5 container">
-          <Row xs={1} md={2} lg={4} className="g-4 py-5">
+        <div className="px-5 row row-cols-3 gap-3">
+          {/* <Row xs={1} md={2} lg={4} className="g-4 py-5"> */}
             {purchases.map((item, idx) => (
-              <Col key={idx} className="overflow-hidden">
-                <Card>
-                  <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
-                </Card>
-              </Col>
+              <Card item={item}></Card>
+              // <Col key={idx} className="overflow-hidden">
+              //   <Card>
+              //     <Card.Img variant="top" src={item.image} />
+              //     <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+              //   </Card> 
+              // </Col>
             ))}
-          </Row>
+          {/* </Row> */}
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>

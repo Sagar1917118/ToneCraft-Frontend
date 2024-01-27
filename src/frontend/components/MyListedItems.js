@@ -1,24 +1,29 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card } from 'react-bootstrap'
-
+// import { Row, Col, Card } from 'react-bootstrap'
+import Card from "./Card.js";
 function renderSoldItems(items) {
   return (
-    <>
-      <h2>Sold</h2>
-      <Row xs={1} md={2} lg={4} className="g-4 py-3">
+    <div  style={{marginTop:"30px",marginBottom:"50px"}}>
+      <h2 className='text-light'>Sold</h2>
+      <div className="container">
+    <div className="px-5 row row-cols-3 gap-3">
+      {/* <Row xs={1} md={2} lg={4} className="g-4 py-3"> */}
         {items.map((item, idx) => (
-          <Col key={idx} className="overflow-hidden">
-            <Card>
-              <Card.Img variant="top" src={item.image} />
-              <Card.Footer>
-                For {ethers.utils.formatEther(item.totalPrice)} ETH - Recieved {ethers.utils.formatEther(item.price)} ETH
-              </Card.Footer>
-            </Card>
-          </Col>
+          // <Col key={idx} className="overflow-hidden">
+          //   <Card>
+          //     <Card.Img variant="top" src={item.image} />
+          //     <Card.Footer>
+          //       For {ethers.utils.formatEther(item.totalPrice)} ETH - Recieved {ethers.utils.formatEther(item.price)} ETH
+          //     </Card.Footer>
+          //   </Card>
+          // </Col> 
+          <Card item={item}></Card>
         ))}
-      </Row>
-    </>
+      {/* </Row> */}
+    </div>
+    </div>
+    </div>
   )
 }
 
@@ -59,8 +64,8 @@ export default function MyListedItems({ marketplace, nft, account }) {
     setListedItems(listedItems)
     setSoldItems(soldItems)
   }
-  useEffect(() => {
-    loadListedItems()
+  useEffect(async() => {
+   await loadListedItems()
   }, [])
   if (loading) return (
     <main style={{ padding: "1rem 0" }}>
@@ -68,27 +73,32 @@ export default function MyListedItems({ marketplace, nft, account }) {
     </main>
   )
   return (
-    <div className="flex justify-center">
-      {listedItems.length > 0 ?
-        <div className="px-5 py-3 container">
-            <h2>Listed</h2>
-          <Row xs={1} md={2} lg={4} className="g-4 py-3">
+    <div className=''>
+      {listedItems.length > 0 ?(
+        <div className='container'>
+          <h2 className='text-light'>Listed</h2>
+          <div className="px-5 py-3 row row-cols-3 gap-3">
+          {/* <Row xs={1} md={2} lg={4} className="g-4 py-3"> */}
             {listedItems.map((item, idx) => (
-              <Col key={idx} className="overflow-hidden">
-                <Card>
-                  <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
-                </Card>
-              </Col>
+              <Card item={item}></Card>
+              // <Col key={idx} className="overflow-hidden">
+              //   <Card>
+              //     <Card.Img variant="top" src={item.image} />
+              //     <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+              //   </Card>
+              // </Col>
             ))}
-          </Row>
-            {soldItems.length > 0 && renderSoldItems(soldItems)}
+          </div>
+          {/* </Row> */}
+          <div className="dataBox_line" style={{marginTop:"10px",marginBottom:"10px"}}></div>
+          {soldItems.length > 0 && renderSoldItems(soldItems)}
         </div>
+        )
         : (
           <main style={{ padding: "1rem 0" }}>
             <h2>No listed assets</h2>
           </main>
         )}
-    </div>
+    </div> 
   );
 }

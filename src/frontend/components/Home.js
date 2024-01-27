@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
+import "./Home.css";
 import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
-
-const Home = ({ marketplace, nft }) => {
+const Home = ({ marketplace, nft}) => {
   const [loading, setLoading] = useState(false)
   const [items, setItems] = useState([])
   const loadMarketplaceItems = async () => {
     // Load all unsold items
     const itemCount = await marketplace.itemCount()
-    console.log(itemCount);
     let items = []
     for (let i = 1; i <= itemCount; i++) {
       const item = await marketplace.items(i)
@@ -22,14 +21,16 @@ const Home = ({ marketplace, nft }) => {
         const metadata = await response.json()
         // get total price of item (item price + fee)
         const totalPrice = await marketplace.getTotalPrice(item.itemId)
+        // console.log(metadata.image);
+        console.log(metadata.image.config.url);
         // Add item to items array
         items.push({
           totalPrice,
-          itemId: item.itemId,
+        itemId: item.itemId,
           seller: item.seller,
           name: metadata.name,
           description: metadata.description,
-          image: metadata.image
+          image: metadata.image.config.url
         })
       }
     }
@@ -42,8 +43,8 @@ const Home = ({ marketplace, nft }) => {
     loadMarketplaceItems()
   }
  
-  useEffect(() => {
-    loadMarketplaceItems()
+  useEffect(async () => {
+      await loadMarketplaceItems()
   }, [])
   if (loading) return (
     <main style={{ padding: "1rem 0" }}>
@@ -51,37 +52,46 @@ const Home = ({ marketplace, nft }) => {
     </main>
   )
   return (
-    <div className="flex justify-center">
+    <div className="container">
       {items.length > 0 ?
-        <div className="px-5 container">
-          <Row xs={1} md={2} lg={4} className="g-4 py-5">
+        <div className="px-5 container row row-cols-4 gap-4" style={{marginBottom:"30px"}}>
+          {/* <Row xs={1} md={2} lg={4} className="g-4 py-5"> */}
             {items.map((item, idx) => (
+              // ========
+              // =======
+              // ------------
               <Col key={idx} className="overflow-hidden">
-                <Card>
-                  <Card.Img variant="top" src={item.image} />
-                  <Card.Body color="secondary">
-                    <Card.Title>{item.name}</Card.Title>
-                    <Card.Text>
+                <Card className="cardLayout">
+                  <audio className="audioPlayer " src={item.image} controls controlsList="nodownload"></audio>
+                  {/* <Card.Img variant="top" src={item.image} /> */}
+                  <Card.Body className=" bg-dark">
+                    <Card.Title className="text-light fw-bold">{item.name}</Card.Title>
+                    <Card.Text className="text-light fw-bold">
                       {item.description}
                     </Card.Text>
                   </Card.Body>
-                  <Card.Footer>
+                  <Card.Footer className="bg-dark">
                     <div className='d-grid'>
-                      <Button onClick={() => buyMarketItem(item)} variant="primary" size="lg">
-                        Buy for {ethers.utils.formatEther(item.totalPrice)} ETH
+                      <Button className="bg-primary-subtle" onClick={() => buyMarketItem(item)} variant="primary" size="lg">
+                        Buy for <span className='fw-bold'>{ethers.utils.formatEther(item.totalPrice)}</span> ETH
                       </Button>
                     </div>
                   </Card.Footer>
                 </Card>
               </Col>
+              // -----------
             ))}
-          </Row>
+          {/* </Row> */}
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>
-            <h2>No listed assets</h2>
+            <h2 style={{color:"white"}}>No listed assets</h2>
           </main>
         )}
+        <div class='air air1'></div>
+      <div class='air air2'></div>
+      <div class='air air3'></div>
+      <div class='air air4'></div>
     </div>
   );
 }
