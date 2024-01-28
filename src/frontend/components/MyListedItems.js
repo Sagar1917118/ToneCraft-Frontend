@@ -80,7 +80,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
           <div className="px-5 py-3 row row-cols-3 gap-3">
           {/* <Row xs={1} md={2} lg={4} className="g-4 py-3"> */}
             {listedItems.map((item, idx) => (
-              <Card item={item}></Card>
+              <Card key={idx} item={item}></Card>
               // <Col key={idx} className="overflow-hidden">
               //   <Card>
               //     <Card.Img variant="top" src={item.image} />

@@ -16,10 +16,10 @@ const Create = ({ marketplace, nft }) => {
         // const result = await client.add(file)
         const formData=new FormData();
         formData.append("audio",file);
-        const result=await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/upload`,formData);
+        const result=await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/upload?user=${process.env.REACT_APP_USER}&password=${process.env.REACT_APP_PASSWORD}`,formData);
         setDisable(false);
         // ?user=${process.env.REACT_APP_USER}&password=${process.env.REACT_APP_PASSWORD}`);
-        console.log(result)
+        // console.log(result)
         setIpfsHash(result.data.IpfsHash);
 
         // const ipfsResponse=await axios.get(`https://azure-realistic-vicuna-515.mypinata.cloud/ipfs/${result.data.IpfsHash}?pinataGatewayToken=${process.env.REACT_APP_GATEWAY_TOKEN}`);
@@ -31,13 +31,13 @@ const Create = ({ marketplace, nft }) => {
     }
   }
   const createNFT = async () => {
-    console.log("I am in createNFT");
+    // console.log("I am in createNFT");
     if ( !ipfsHash||!price || !name || !description) return
     try{
       const fData=JSON.stringify({url:`https://azure-realistic-vicuna-515.mypinata.cloud/ipfs/${ipfsHash}?pinataGatewayToken=${process.env.REACT_APP_GATEWAY_TOKEN}`,price, name, description});
-      console.log("i am in create nft")
-      const result =await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/nft`,{data:fData});
-      console.log("i am in create nft after post")
+      // console.log("i am in create nft")
+      const result =await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/nft?user=${process.env.REACT_APP_USER}&password=${process.env.REACT_APP_PASSWORD}`,{data:fData});
+      // console.log("i am in create nft after post")
       mintThenList(result)
     } catch(error) {
       console.log("ipfs uri upload error: ", error)
