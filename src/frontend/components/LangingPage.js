@@ -8,8 +8,8 @@ function LandingPage({ web3Handler, account }){
         <img className="hero_image" src="./newAsset.png"></img>
         <span>Tone Craft Hub</span>
         </div>
-        <div class="area" >
-            <ul class="circles">
+        <div className="area" >
+            <ul className="circles">
                     <li></li>
                     <li></li>
                     <li></li>

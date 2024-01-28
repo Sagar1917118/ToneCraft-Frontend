@@ -22,7 +22,7 @@ const Home = ({ marketplace, nft}) => {
         // get total price of item (item price + fee)
         const totalPrice = await marketplace.getTotalPrice(item.itemId)
         // console.log(metadata.image);
-        console.log(metadata.image.config.url);
+        // console.log(metadata.image.config.url);
         // Add item to items array
         items.push({
           totalPrice,
@@ -30,7 +30,7 @@ const Home = ({ marketplace, nft}) => {
           seller: item.seller,
           name: metadata.name,
           description: metadata.description,
-          image: metadata.image.config.url
+          image: metadata.url
         })
       }
     }
@@ -44,6 +44,8 @@ const Home = ({ marketplace, nft}) => {
   }
  
   useEffect(async () => {
+    const itemCount = await marketplace.itemCount();
+     
       await loadMarketplaceItems()
   }, [])
   if (loading) return (
@@ -55,11 +57,13 @@ const Home = ({ marketplace, nft}) => {
     <div className="container">
       {items.length > 0 ?
         <div className="px-5 container row row-cols-4 gap-4" style={{marginBottom:"30px"}}>
-          {/* <Row xs={1} md={2} lg={4} className="g-4 py-5"> */}
-            {items.map((item, idx) => (
+          {/* <Row xs={1} md={2} lg={4} Name="g-4 py-5"> */}
+            {items.map((item, idx) => {
+              // if(item.price!==undefined){
               // ========
               // =======
               // ------------
+              return(
               <Col key={idx} className="overflow-hidden">
                 <Card className="cardLayout">
                   <audio className="audioPlayer " src={item.image} controls controlsList="nodownload"></audio>
@@ -78,9 +82,11 @@ const Home = ({ marketplace, nft}) => {
                     </div>
                   </Card.Footer>
                 </Card>
-              </Col>
+              </Col>) //return
+              // } //if
               // -----------
-            ))}
+            }//change
+            )}
           {/* </Row> */}
         </div>
         : (
@@ -88,10 +94,10 @@ const Home = ({ marketplace, nft}) => {
             <h2 style={{color:"white"}}>No listed assets</h2>
           </main>
         )}
-        <div class='air air1'></div>
-      <div class='air air2'></div>
-      <div class='air air3'></div>
-      <div class='air air4'></div>
+        <div className='air air1'></div>
+      <div className='air air2'></div>
+      <div className='air air3'></div>
+      <div className='air air4'></div>
     </div>
   );
 }

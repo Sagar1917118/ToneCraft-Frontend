@@ -18,7 +18,7 @@ function renderSoldItems(items) {
           //     </Card.Footer>
           //   </Card>
           // </Col> 
-          <Card item={item}></Card>
+          <Card key={idx} item={item}></Card>
         ))}
       {/* </Row> */}
     </div>
@@ -76,7 +76,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
     <div className=''>
       {listedItems.length > 0 ?(
         <div className='container'>
-          <h2 className='text-light'>Listed</h2>
+          <h2 className='text-light' style={{color:"white"}}>Listed</h2>
           <div className="px-5 py-3 row row-cols-3 gap-3">
           {/* <Row xs={1} md={2} lg={4} className="g-4 py-3"> */}
             {listedItems.map((item, idx) => (
@@ -96,7 +96,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
         )
         : (
           <main style={{ padding: "1rem 0" }}>
-            <h2>No listed assets</h2>
+            <h2 style={{color:"white"}}>No listed assets</h2>
           </main>
         )}
     </div> 
